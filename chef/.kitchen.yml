@@ -1,0 +1,76 @@
+---
+driver:
+  name: vagrant
+  synced_folders:
+    - ['..', '/home/vagrant/incubator-hawq']
+  customize:
+    memory: 2048
+    cpus: 4
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+    run_list:
+      - 'recipe[apt::default]'
+      - 'recipe[java::default]'
+    attributes: {
+      java: {
+        install_flavor: "openjdk",
+        jdk_version: 8
+      }
+    }
+  - name: centos-7.1
+    run_list:
+      - 'recipe[yum-epel::default]'
+      - 'recipe[java::default]'
+    attributes: {
+      java: {
+        install_flavor: "openjdk",
+        jdk_version: 8
+      }
+    }
+suites:
+  - name: thrift
+    run_list:
+      - 'recipe[hawq_build::default]' 
+      - 'recipe[hawq_build::thrift]' 
+  - name: bison
+    run_list:
+      - 'recipe[hawq_build::default]' 
+      - 'recipe[hawq_build::bison]' 
+  - name: libhdfs3
+    run_list:
+      - 'recipe[hawq_build::default]' 
+      - 'recipe[hawq_build::libhdfs3]'
+  - name: libyarn
+    attributes: {
+      hawq_build: {
+        libyarn: {
+          git_repository: '/home/vagrant/incubator-hawq',
+          git_revision: 'master'
+        }
+      }
+    }
+    run_list:
+      - 'recipe[hawq_build::default]' 
+      - 'recipe[hawq_build::libyarn]'
+  - name: hawq
+    attributes: {
+      hawq_build: {
+        git_repository: '/home/vagrant/incubator-hawq',
+        git_revision: 'master',
+        libyarn: {
+          git_repository: '/home/vagrant/incubator-hawq',
+          git_revision: 'master'
+        }
+      }
+    }
+    run_list:
+      - 'recipe[hawq_build::default]' 
+      - 'recipe[hawq_build::thrift]' 
+      - 'recipe[hawq_build::bison]' 
+      - 'recipe[hawq_build::libhdfs3]'
+      - 'recipe[hawq_build::libyarn]'
+      - 'recipe[hawq_build::hawq]'

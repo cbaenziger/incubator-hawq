@@ -1,0 +1,3 @@
+source "https://api.berkshelf.com"
+
+cookbook 'hawq_build', path: 'hawq_build'
