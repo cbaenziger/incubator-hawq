@@ -2145,7 +2145,7 @@ int findFile(const char *filename)
 int createFile(const char *filename)
 {
 	int fd = 0;
-	fd = open(filename, O_RDWR|O_CREAT);
+	fd = open(filename, O_RDWR|O_CREAT, 4777);
 	int res = fd > 0 ? FUNC_RETURN_OK : FUNC_RETURN_FAIL;
 	if ( fd >= 0 )
 	{
