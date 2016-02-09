@@ -45,7 +45,7 @@ def main():
         print "HAWQ home directory not defined, please check GPHOME settings."
         sys.exit(1)
 
-    source_hawq_env = "source %s/greenplum_path.sh" % hawq_home
+    source_hawq_env = ". %s/greenplum_path.sh" % hawq_home
 
     if len(sys.argv) > 2:
         hawq_command = sys.argv[1]
