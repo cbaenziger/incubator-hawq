@@ -8,6 +8,8 @@ default[:hawq_build][:bison][:home] = "#{Chef::Config[:file_cache_path]}/bison"
 default[:hawq_build][:bison][:prefix] = '/usr/local/'
 
 default[:hawq_build][:build_user] = 'vagrant'
+default[:hawq_build][:hawq_user] = 'hawq'
+default[:hawq_build][:hawq_home_dir] = "/var/lib/#{node[:hawq_build][:hawq_user]}"
 
 default[:hawq_build][:libhdfs3][:git_repository] = 'https://github.com/PivotalRD/libhdfs3'
 default[:hawq_build][:libhdfs3][:git_revision] = 'apache-rpc-9'

@@ -23,3 +23,10 @@ end
     action :install
   end
 end
+
+# runtime dependencies
+%W{python-pygresql python-psutil python-paramiko}.each do |pkg|
+  package pkg do
+    action :install
+  end
+end
