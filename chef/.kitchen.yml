@@ -40,19 +40,19 @@ platforms:
       }
     }
 suites:
-  - name: thrift
+  - name: thrift_build
     run_list:
       - 'recipe[hawq_build::default]' 
       - 'recipe[hawq_build::thrift]' 
-  - name: bison
+  - name: bison_build
     run_list:
       - 'recipe[hawq_build::default]' 
       - 'recipe[hawq_build::bison]' 
-  - name: libhdfs3
+  - name: libhdfs3_build
     run_list:
       - 'recipe[hawq_build::default]' 
       - 'recipe[hawq_build::libhdfs3]'
-  - name: libyarn
+  - name: libyarn_build
     attributes: {
       hawq_build: {
         libyarn: {
@@ -64,7 +64,25 @@ suites:
     run_list:
       - 'recipe[hawq_build::default]' 
       - 'recipe[hawq_build::libyarn]'
-  - name: hawq
+  - name: hawq_build
+    attributes: {
+      hawq_build: {
+        git_repository: '/home/vagrant/incubator-hawq',
+        git_revision: 'HAWQ-307',
+        libyarn: {
+          git_repository: '/home/vagrant/incubator-hawq',
+          git_revision: 'HAWQ-307'
+        }
+      }
+    }
+    run_list:
+      - 'recipe[hawq_build::default]' 
+      - 'recipe[hawq_build::thrift]' 
+      - 'recipe[hawq_build::bison]' 
+      - 'recipe[hawq_build::libhdfs3]'
+      - 'recipe[hawq_build::libyarn]'
+      - 'recipe[hawq_build::hawq]'
+  - name: hawq_pseudo_cluster
     attributes: {
       hawq_build: {
         git_repository: '/home/vagrant/incubator-hawq',
@@ -124,45 +142,3 @@ suites:
       - 'recipe[hawq_build::libyarn]'
       - 'recipe[hawq_build::hawq]'
       - 'recipe[hawq_build::operate_hawq]'
-  - name: namenode
-    attributes: {
-      bcpc: {
-        management: {
-          cidr: '10.0.2.15/24'
-        },
-        storage: {
-          cidr: '10.0.2.15/24'
-        },
-        floating: {
-          cidr: '10.0.2.15/24'
-        },
-        repos: {
-          hortonworks: 'http://public-repo-1.hortonworks.com/HDP/ubuntu14/2.x/updates/2.4.0.0',
-          hdp_utils: 'http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/ubuntu14'
-        },
-        hadoop: {
-          distribution: {
-            release: '2.4.0.0-169'
-          },
-          skip_restart_coordination: true,
-          cluster-name: 'test-kitchen',
-          mounts: [0],
-          hdfs: {
-            dfs_replication_factor: 1,
-            failed_volumes_tolerated: 0
-          }
-        }
-      },
-      java: {
-        install_flavor: "openjdk",
-        jdk_version: 8
-      }
-    }
-    run_list:
-      - 'recipe[bcpc::default]'
-      - 'recipe[java::default]'
-      - 'recipe[bcpc-hadoop::hdp_repo]'
-      - 'recipe[bcpc-hadoop::configs]'
-      - 'recipe[bcpc-hadoop::hadoop_config]'
-      - 'recipe[bcpc-hadoop::namenode_no_HA]'
-      - 'recipe[bcpc-hadoop::datanode]'
