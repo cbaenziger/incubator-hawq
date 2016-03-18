@@ -2,7 +2,7 @@ source "https://api.berkshelf.com"
 
 cookbook 'hawq_build', path: 'hawq_build'
 cookbook 'openssh'
-cookbook 'bcpc', path: git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
+cookbook 'bcpc', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
 cookbook 'bcpc-hadoop', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
 cookbook 'bach_common', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
 cookbook 'bach_krb5', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
