@@ -35,7 +35,7 @@ platforms:
       },
       bcpc: {
         hadoop: {
-          java: "/usr/lib/jvm/default-java/"
+          java: "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.71-2.b15.el7_2.x86_64/"
         }
       }
     }
