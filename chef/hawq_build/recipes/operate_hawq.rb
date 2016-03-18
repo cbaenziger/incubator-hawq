@@ -1,5 +1,6 @@
 auth_key_file = ::File.join(node[:hawq_build][:hawq_home_dir], '.ssh/authorized_keys')
-ssh_key_file = ::File.join(node[:hawq_build][:hawq_home_dir], '.ssh/id_dsa.pub')
+ssh_key_file = ::File.join(node[:hawq_build][:hawq_home_dir], '.ssh/id_dsa')
+ssh_known_hosts_file = ::File.join(node[:hawq_build][:hawq_home_dir], '.ssh/known_hosts')
 
 user node[:hawq_build][:hawq_user] do
   home node[:hawq_build][:hawq_home_dir]
@@ -22,14 +23,14 @@ end
 ruby_block 'append ssh key to authorized keys' do
   def read_key_material(key)
     ::File.readlines(key).\
-      select{ |line| line !~ /-----.*PRIVATE KEY----/ }.\
+      select{ |line| line !~ /-----.*PUBLIC KEY----/ }.\
       map{ |line| line.gsub(/\n/, '') }.join('')
   end
   block do
     require 'fileutils'
     key = ''
     begin
-      key = read_key_material(ssh_key_file)
+      key = read_key_material(ssh_key_file + ".pub")
       key_present = ::File.read(auth_key_file) !~ \
         ::Regexp.new(::Regexp.escape(key))
     rescue SystemCallError
@@ -49,6 +50,12 @@ ruby_block 'append ssh key to authorized keys' do
            rescue SystemCallError
              false
            end }
+end
+
+bash 'gather hostkey for known_hosts' do
+  user node[:hawq_build][:hawq_user]
+  creates ssh_known_hosts_file
+  code "ssh-keyscan -H 127.0.0.1 >> #{ssh_known_hosts_file}"
 end
 
 bash 'set hdfs homedir for greenplum_path.sh' do
@@ -89,7 +96,7 @@ end
 bash 'create HAWQ cluster' do
   code 'source /usr/local/hawq/greenplum_path.sh; hawq init cluster -a'
   user node[:hawq_build][:hawq_user]
-  not_if {{ ::File.exist?("#{node[:hawq_build][:hawq_home_dir]}/hawq-data-directory") }}
+  not_if { ::File.exist?("#{node[:hawq_build][:hawq_home_dir]}/hawq-data-directory") }
 end
 
 bash 'start HAWQ cluster' do
@@ -97,4 +104,3 @@ bash 'start HAWQ cluster' do
   user node[:hawq_build][:hawq_user]
   not_if 'source /usr/local/hawq/greenplum_path.sh; hawq state'
 end
-  code 'hawq

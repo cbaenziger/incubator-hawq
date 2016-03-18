@@ -32,6 +32,11 @@ platforms:
       java: {
         install_flavor: "openjdk",
         jdk_version: 8
+      },
+      bcpc: {
+        hadoop: {
+          java: "/usr/lib/jvm/default-java/"
+        }
       }
     }
 suites:
@@ -80,14 +85,15 @@ suites:
           cidr: '10.0.2.15/24'
         },
         repos: {
-          hortonworks: 'http://public-repo-1.hortonworks.com/HDP/ubuntu14/2.x/updates/2.3.4.0',
-          hdp_utils: 'http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/ubuntu14'
+          apt: {
+            hortonworks: 'http://public-repo-1.hortonworks.com/HDP/ubuntu14/2.x/updates/2.4.0.0',
+            hdp_utils: 'http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/ubuntu14'
+          }
         },
         hadoop: {
           distribution: {
-            release: '2.3.4.0-3485'
+            release: '2.4.0.0-169'
           },
-          java: '/usr/lib/jvm/java-1.8.0-openjdk-amd64/',
           skip_restart_coordination: true,
           cluster-name: 'test-kitchen',
           mounts: [0],
@@ -118,3 +124,45 @@ suites:
       - 'recipe[hawq_build::libyarn]'
       - 'recipe[hawq_build::hawq]'
       - 'recipe[hawq_build::operate_hawq]'
+  - name: namenode
+    attributes: {
+      bcpc: {
+        management: {
+          cidr: '10.0.2.15/24'
+        },
+        storage: {
+          cidr: '10.0.2.15/24'
+        },
+        floating: {
+          cidr: '10.0.2.15/24'
+        },
+        repos: {
+          hortonworks: 'http://public-repo-1.hortonworks.com/HDP/ubuntu14/2.x/updates/2.4.0.0',
+          hdp_utils: 'http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/ubuntu14'
+        },
+        hadoop: {
+          distribution: {
+            release: '2.4.0.0-169'
+          },
+          skip_restart_coordination: true,
+          cluster-name: 'test-kitchen',
+          mounts: [0],
+          hdfs: {
+            dfs_replication_factor: 1,
+            failed_volumes_tolerated: 0
+          }
+        }
+      },
+      java: {
+        install_flavor: "openjdk",
+        jdk_version: 8
+      }
+    }
+    run_list:
+      - 'recipe[bcpc::default]'
+      - 'recipe[java::default]'
+      - 'recipe[bcpc-hadoop::hdp_repo]'
+      - 'recipe[bcpc-hadoop::configs]'
+      - 'recipe[bcpc-hadoop::hadoop_config]'
+      - 'recipe[bcpc-hadoop::namenode_no_HA]'
+      - 'recipe[bcpc-hadoop::datanode]'
