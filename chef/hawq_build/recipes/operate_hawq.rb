@@ -95,12 +95,14 @@ end
 
 bash 'create HAWQ cluster' do
   code 'source /usr/local/hawq/greenplum_path.sh; hawq init cluster -a'
+  environment 'HOME' => node[:hawq_build][:hawq_home_dir]
   user node[:hawq_build][:hawq_user]
   not_if { ::File.exist?("#{node[:hawq_build][:hawq_home_dir]}/hawq-data-directory") }
 end
 
 bash 'start HAWQ cluster' do
   code 'source /usr/local/hawq/greenplum_path.sh; hawq start cluster -a'
+  environment 'HOME' => node[:hawq_build][:hawq_home_dir]
   user node[:hawq_build][:hawq_user]
   not_if 'source /usr/local/hawq/greenplum_path.sh; hawq state'
 end
