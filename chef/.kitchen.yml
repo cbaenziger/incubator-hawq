@@ -56,7 +56,7 @@ suites:
     attributes: {
       hawq_build: {
         libyarn: {
-          git_repository: '/home/vagrant/incubator-hawq',
+          git_repository: 'https://github.com/apache/incubator-hawq',
           git_revision: 'HAWQ-307'
         }
       }
@@ -67,10 +67,10 @@ suites:
   - name: hawq_build
     attributes: {
       hawq_build: {
-        git_repository: '/home/vagrant/incubator-hawq',
+        git_repository: 'https://github.com/apache/incubator-hawq',
         git_revision: 'HAWQ-307',
         libyarn: {
-          git_repository: '/home/vagrant/incubator-hawq',
+          git_repository: 'https://github.com/apache/incubator-hawq',
           git_revision: 'HAWQ-307'
         }
       }
@@ -82,13 +82,14 @@ suites:
       - 'recipe[hawq_build::libhdfs3]'
       - 'recipe[hawq_build::libyarn]'
       - 'recipe[hawq_build::hawq]'
+
   - name: hawq_pseudo_cluster
     attributes: {
       hawq_build: {
-        git_repository: '/home/vagrant/incubator-hawq',
+        git_repository: 'https://github.com/apache/incubator-hawq',
         git_revision: 'HAWQ-307',
         libyarn: {
-          git_repository: '/home/vagrant/incubator-hawq',
+          git_repository: 'https://github.com/apache/incubator-hawq',
           git_revision: 'HAWQ-307'
         }
       },
