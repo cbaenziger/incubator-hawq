@@ -2,13 +2,23 @@ source "https://api.berkshelf.com"
 
 cookbook 'hawq_build', path: 'hawq_build'
 cookbook 'openssh'
-cookbook 'bcpc', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
-cookbook 'bcpc-hadoop', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
-cookbook 'bach_common', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
-cookbook 'bach_krb5', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
-cookbook 'bach_spark', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
-cookbook 'bcpc_jmxtrans', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
-cookbook 'hannibal', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
-cookbook 'kafka-bcpc', git: 'https://github.com/cbaenziger/chef-bach.git', branch: 'test-kitchen'
+
+def bach_cookbook(name, version = '>= 0.0.0', options = {})
+  cookbook(name, version, {
+    git: 'https://github.com/cbaenziger/chef-bach.git',
+    branch: 'test-kitchen',
+    rel: "cookbooks/#{name}"
+   }.merge(options))
+end
+
+bach_cookbook 'bcpc'
+bach_cookbook 'bcpc-hadoop'
+bach_cookbook 'bach_common'
+bach_cookbook 'bach_krb5'
+bach_cookbook 'bach_spark'
+bach_cookbook 'bcpc_jmxtrans'
+bach_cookbook 'hannibal'
+bach_cookbook 'kafka-bcpc'
+
 cookbook 'dpkg_autostart', git: 'https://github.com/hw-cookbooks/dpkg_autostart.git'
 cookbook 'cobblerd', git: 'https://github.com/bloomberg/cobbler-cookbook.git'
